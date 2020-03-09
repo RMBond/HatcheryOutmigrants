@@ -131,7 +131,7 @@ StatBoxplotCustom <- ggproto("StatBoxplotCustom", Stat,
 ####Boxplot of movement ####
 custom_breaks <- seq(1500,3500,250) #CUSTOM TICKMARKS
 
-ggplot(fish, aes(x = Ordinal_Day_From_Release, y = Days_to_Detect, group = Ordinal_Day_From_Release)) +
+ggplot(fish, aes(x = Ordinal_Day_From_Release, y = log(Days_to_Detect), group = Ordinal_Day_From_Release)) +
   stat_boxplot_custom(qs = c(0.1, 0.25, 0.5, 0.75, 0.9), geom = 'errorbar', linetype = 1, width = 0.3) +
   stat_boxplot_custom(qs = c(0.1, 0.25, 0.5, 0.75, 0.9), outlier.shape = 1, outlier.colour = "gray", width = 0.5) +
   facet_wrap(Water_Year ~ ., ncol = 1) +
@@ -139,7 +139,7 @@ ggplot(fish, aes(x = Ordinal_Day_From_Release, y = Days_to_Detect, group = Ordin
   theme_classic() +
   # scale_y_continuous(limits = c(-6.9,11), breaks = custom_breaks, expand = c(0,0),
   #                    labels = every_nth(custom_breaks, 2, inverse = TRUE)) +
-  ylab("Days to Detection") +
+  ylab("Log(Days to Detection)") +
   xlab("Release Day") +
   theme(strip.background = element_blank(), strip.text.x = element_blank())
   
