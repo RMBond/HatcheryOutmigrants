@@ -6,6 +6,7 @@ library(tidyr)
 library(ggplot2)
 library(gridExtra)
 library(lubridate)
+library(viridis)
 
 ####Read in data####
 fish <- read.csv('data/Final_Data_All_Years20200306.csv',sep = ',') #18402 obs of 8 variables
@@ -129,21 +130,35 @@ StatBoxplotCustom <- ggproto("StatBoxplotCustom", Stat,
 
 
 ####Boxplot of movement ####
-custom_breaks <- seq(1500,3500,250) #CUSTOM TICKMARKS
+custom_breaks <- seq(0,100,10) #CUSTOM TICKMARKS
 
-ggplot(fish, aes(x = Ordinal_Day_From_Release, y = log(Days_to_Detect), group = Ordinal_Day_From_Release)) +
+ggplot(fish, aes(x = Ordinal_Day_From_Release, y = Days_to_Detect, group = Ordinal_Day_From_Release)) +
   stat_boxplot_custom(qs = c(0.1, 0.25, 0.5, 0.75, 0.9), geom = 'errorbar', linetype = 1, width = 0.3) +
   stat_boxplot_custom(qs = c(0.1, 0.25, 0.5, 0.75, 0.9), outlier.shape = 1, outlier.colour = "gray", width = 0.5) +
   facet_wrap(Water_Year ~ ., ncol = 1) +
   # geom_point(data = Fish.Growth.ALL.SH.summary,aes(x = SamplingMonth.y, y = MSGR_mean), size = 2) + #add mean point for each month
   theme_classic() +
-  # scale_y_continuous(limits = c(-6.9,11), breaks = custom_breaks, expand = c(0,0),
-  #                    labels = every_nth(custom_breaks, 2, inverse = TRUE)) +
-  ylab("Log(Days to Detection)") +
+  scale_y_continuous(limits = c(0,100), breaks = custom_breaks,
+                     labels = every_nth(custom_breaks, 2, inverse = TRUE)) +
+  ylab("Days to Detection") +
   xlab("Release Day") +
   theme(strip.background = element_blank(), strip.text.x = element_blank())
-  
 
+
+#violin plot behind boxplot with color (no outliers).
+ggplot(fish, aes(x = Ordinal_Day_From_Release, y = Days_to_Detect, fill = Ordinal_Day_From_Release, group = Ordinal_Day_From_Release)) +
+  geom_violin(width = 8) +
+  stat_boxplot_custom(qs = c(0.1, 0.25, 0.5, 0.75, 0.9), outlier.shape = NA, width = 0.5, color = "grey", alpha = 0.2) +
+  facet_wrap(Water_Year ~ ., ncol = 1) +
+  # geom_point(data = Fish.Growth.ALL.SH.summary,aes(x = SamplingMonth.y, y = MSGR_mean), size = 2) + #add mean point for each month
+  theme_classic() +
+  scale_fill_viridis() +
+  scale_y_continuous(limits = c(0,60), breaks = custom_breaks,
+                     labels = every_nth(custom_breaks, 2, inverse = TRUE)) +
+  ylab("Days to Detection") +
+  xlab("Release Day") +
+  theme(strip.background = element_blank(), strip.text.x = element_blank()) +
+  theme(legend.position =  "none", plot.title = element_text(size = 11)) 
 
 
 
