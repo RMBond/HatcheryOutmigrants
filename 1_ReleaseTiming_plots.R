@@ -9,7 +9,7 @@ library(lubridate)
 library(viridis)
 
 ####Read in data####
-fish <- read.csv('data/Final_Data_All_Years20200306.csv',sep = ',') #18402 obs of 8 variables
+fish <- read.csv('data/Final_Data_All_Years20200311.csv',sep = ',') #21523 obs of 8 variables
 
 #formatting
 fish <- fish %>% 
@@ -138,7 +138,7 @@ ggplot(fish, aes(x = Ordinal_Day_From_Release, y = Days_to_Detect, group = Ordin
   facet_wrap(Water_Year ~ ., ncol = 1) +
   # geom_point(data = Fish.Growth.ALL.SH.summary,aes(x = SamplingMonth.y, y = MSGR_mean), size = 2) + #add mean point for each month
   theme_classic() +
-  scale_y_continuous(limits = c(0,100), breaks = custom_breaks,
+  scale_y_continuous(limits = c(0,60), breaks = custom_breaks,
                      labels = every_nth(custom_breaks, 2, inverse = TRUE)) +
   ylab("Days to Detection") +
   xlab("Release Day") +
@@ -263,5 +263,18 @@ ggplot(fish, aes(x = Ordinal_Day_From_Release, y = Days_to_Detect, fill = Ordina
   xlab("Release Day") +
   theme(strip.background = element_blank(), strip.text.x = element_blank())
 
+
+####Historgram by WY####
+
+ggplot(fish, aes(x = Days_to_Detect, fill = Water_Year)) +
+  geom_histogram(binwidth = 10) +
+  facet_wrap(Water_Year ~ ., ncol = 1) +
+  theme_classic() +
+  scale_fill_viridis() +
+  scale_x_continuous(limits = c(0,100), breaks = custom_breaks,
+                     labels = every_nth(custom_breaks, 2, inverse = TRUE)) +
+  xlab("Days to Detection") +
+  theme(strip.background = element_blank(), strip.text.x = element_blank()) +
+  theme(legend.position =  "none", plot.title = element_text(size = 11)) 
 
 
